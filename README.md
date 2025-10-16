@@ -1,2 +1,3 @@
 # Cipher-v1.0
-A toy cypher im working on, got no idea on either cryptograhpy or c++ well rn so dont use it for any real secuirty, im planning for it to eventualy beceome a full 128 bit key ARX but still its going to suck compare to anything else
+Its the 1st code i made at 1st, its varibales are named terribly and few ussless opretions are in place probably, comments there explein the code to me if i wanted to fall back on what does what cuz im begginer in c++
+How it works is xor, addmod, xor, NOT, next version gonna have ussless expleitons in comments removed, cleaned up variabels and whatever else i put in changelogs there
