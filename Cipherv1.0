@@ -6,7 +6,7 @@
 using namespace std;
 int main()
 {
-	int p,k,c,c1,c2, nr,nn, r; // plaintext, key, cypher, cypher1, cypher2,number of repetitions(nr), which bit of NOT(nn), repetitions(r =nn so it doesnt change nn)
+	int p,k,c,c1,c2, nr,nn, r; // plaintext, key, cypher, cypher1, cypher2,number of rounds(nr), which bit of NOT(nn), rounds(r =nr so it doesnt change nr)
 	string choice; //for picking ecnryption or decryption
 	cout <<"encrypt or decrypt(e/d): "; //choice
 	cin >> choice;
