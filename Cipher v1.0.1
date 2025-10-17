@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+#include <random>
+#include <bitset>
+#include <vector>
+using namespace std;
+int main()
+{
+    //variables
+    int plaintext, fullkey, Xor, addmod, cipher,rounds,NOTbit,cipherkey;//cypherkey is temproarly key encrpytio does on utf-8 until i add padding
+    string choice;
+    
+    cout << "Encryption or Decryption(e/d): ";
+    cin >> choice;
+    cin.ignore();//so vectors dont fuck themsefls over
+    
+    if (choice =="e") {
+        //messege and getting the text
+        string text;//idk why i should put this string here but if i put it outisde of this loop then suddnely code fucks over
+        cout << "Messege to encrypt:";
+        getline(cin,text);
+        
+        //random generation
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<>randomkey(32768, 65535);
+        
+        //generate the key
+        fullkey = randomkey(gen);
+        uint16_t bitkey = fullkey; //bitkey is for bit manipultion stuff
+        uint16_t rounds =(bitkey >> 12) & 0b1111;
+        uint16_t cipherkey =(bitkey >>4) & 0xFF;
+        uint16_t temprounds = rounds;
+      vector<int> encryptionDecimal;//turns text into decimal cuz idk how to avoid unprintable symboles
+      
+      for(char ch : text) {//encrypts each character, ik its worse for security but idk how else im supposed ot encrypt long text
+        uint8_t plaintext = static_cast<unsigned char>(ch);//makes it to range of 0-255 isnted of -127 to 128 like defult char
+        uint8_t cipher = plaintext;//needed for final bit manipultion that cypher is a binary
+        temprounds = rounds;
+        while(temprounds !=0) {
+            Xor = cipher ^ cipherkey;
+            addmod =(Xor + cipherkey) % 256;//we do it for 8 bits rn so we addmod by next full bit, beign 256
+            cipher = addmod ^ cipherkey;
+            temprounds--;
+            }
+            encryptionDecimal.push_back(static_cast<int>(cipher));
+        }
+        //print cipher
+    cout << "Cipher is: ";
+    for (int val : encryptionDecimal) {
+        cout << val << " ";
+    }
+    cout << " "<<endl;
+    //print key
+    cout <<"The key is: " <<fullkey;
+    } 
+    //else if
+    else if(choice =="d"){
+        //declares variables needed
+        vector<int> encryptionDecimal;
+        string text;
+        //questions for cipher and key
+        cout <<"insert cipher(space seprated and end it with -1: ";
+		int val;//declars int val
+		while (cin >> val && val != -1) { // makes int(aka numbers) as declared numbers until it reaches -1
+			//so for eg 51 21 -1 it changes val to 51, does stuff in the loop, here adding it to vector, then comes back, turns into 21, repaets and it then goes to -1 so it stops
+			encryptionDecimal.push_back(val); //adds current val to encryptionDecimal vector
+		}
+		cout << "insert key: ";
+		cin >> fullkey; 
+		//reads info form key
+        uint16_t bitkey = fullkey; //bitkey is for bit manipultion stuff
+        uint16_t rounds =(bitkey >> 12) & 0b1111;
+        uint16_t cipherkey =(bitkey >>4) & 0xFF;
+        uint16_t temprounds = rounds;
+        //encryption
+        for (int encVal : encryptionDecimal) { //reads each number of the cipher
+			uint8_t cipher = static_cast<uint8_t>(encVal); //static_cast coverting int to uint8_t
+			temprounds = rounds;
+			while (temprounds != 0) {
+			    Xor = cipher ^ cipherkey;
+			    addmod =((Xor - cipherkey)+256) % 256;
+			    cipher = addmod ^ cipherkey;
+				temprounds--;
+			}
+
+			text += static_cast<char>(cipher);//+= means adding itself ot next one so for eg a += b is same as a = a+b
+			//static_cast converts data so it converts cypher from int to char
+			//so in total until last of encryptionDecimal is reached we add cypher as char to string decrypted so for eg if c2=a then in next loop c2=b decrypted="ab"
+		}
+		//print
+		cout << "Decrypted text: " << text << endl;
+	}
+    return 0;
+}
